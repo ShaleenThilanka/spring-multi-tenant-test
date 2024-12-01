@@ -1,5 +1,8 @@
 package com.shaliya.springmultitenant.springmultitenant.config;
 
+import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
@@ -7,42 +10,37 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TenantDatabaseConfig {
-    private Map<String, DataSourceProperties> tenantDatabases = new HashMap<>();
+    @Autowired
+    private Environment env;
 
-    public void addTenant(String tenantId, String url, String username, String password) {
-        DataSourceProperties properties = new DataSourceProperties(url, username, password);
-        tenantDatabases.put(tenantId, properties);
+    @Autowired
+    private MultiTenantConnectionProvider multiTenantConnectionProvider;
+
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource defaultDataSource = new DriverManagerDataSource();
+        defaultDataSource.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
+        defaultDataSource.setUrl(env.getProperty("spring.datasource.url"));
+        defaultDataSource.setUsername(env.getProperty("spring.datasource.username"));
+        defaultDataSource.setPassword(env.getProperty("spring.datasource.password"));
+
+        // Configure tenant datasources
+        Map<String, DataSource> tenantDataSources = new HashMap<>();
+        tenantDataSources.put("default", defaultDataSource);
+
+        // Add method to dynamically add tenant datasources
+        multiTenantConnectionProvider.addTenantDataSource("default", defaultDataSource);
+
+        return defaultDataSource;
     }
 
-    public DataSource createDataSourceForTenant(String tenantId) {
-        DataSourceProperties props = tenantDatabases.get(tenantId);
-        if (props == null) {
-            throw new RuntimeException("Tenant database not configured: " + tenantId);
-        }
+    public void addTenantDataSource(String tenantId, String url, String username, String password) {
+        DriverManagerDataSource tenantDataSource = new DriverManagerDataSource();
+        tenantDataSource.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
+        tenantDataSource.setUrl(url);
+        tenantDataSource.setUsername(username);
+        tenantDataSource.setPassword(password);
 
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl(props.url);
-        dataSource.setUsername(props.username);
-        dataSource.setPassword(props.password);
-
-        return dataSource;
-    }
-
-    private static class DataSourceProperties {
-        String url;
-        String username;
-        String password;
-
-        public DataSourceProperties(String url, String username, String password) {
-            this.url = url;
-            this.username = username;
-            this.password = password;
-        }
-    }
-
-    // Method to get all configured tenants
-    public Map<String, DataSourceProperties> getTenantDatabases() {
-        return new HashMap<>(tenantDatabases);
+        multiTenantConnectionProvider.addTenantDataSource(tenantId, tenantDataSource);
     }
 }

@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/users")
 public class UserController {
-    private final TenantManagementService tenantManagementService;
+
     private final UserService userService;
 
-    public UserController(TenantManagementService tenantManagementService, UserService userService) {
-        this.tenantManagementService = tenantManagementService;
+    public UserController(UserService userService) {
         this.userService = userService;
     }
+
 
     @PostMapping("/register")
     public ResponseEntity<StandardResponse> registerUserAndBusiness(@RequestBody RequestUserDTO requestUserDTO

@@ -24,18 +24,15 @@ public class User {
 
     @Column(length = 100, name = "email", unique = true)
     @Email
-    @NotNull
     private String email;
 
     @Column(name = "password")
     private String password;
 
     @Column(length = 45, name = "first_name")
-    @NotNull
     private String firstName;
 
     @Column(length = 45, name = "last_name")
-    @NotNull
     private String lastName;
 
     @Column(name = "active_state", columnDefinition = "TINYINT")

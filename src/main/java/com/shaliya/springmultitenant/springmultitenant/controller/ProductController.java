@@ -1,5 +1,6 @@
 package com.shaliya.springmultitenant.springmultitenant.controller;
 
+import com.shaliya.springmultitenant.springmultitenant.config.CurrentTenantIdentifierResolverImpl;
 import com.shaliya.springmultitenant.springmultitenant.config.MultiTenantConnectionProvider;
 import com.shaliya.springmultitenant.springmultitenant.dto.CommonResponseDTO;
 import com.shaliya.springmultitenant.springmultitenant.dto.requestdto.RequestProductDTO;
@@ -13,29 +14,33 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/products")
 public class ProductController {
-    @Autowired
-    private ProductService productService;
+
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @PostMapping("/add")
     public CommonResponseDTO addProduct(
             @RequestBody RequestProductDTO product,
             @RequestHeader("X-Tenant-ID") String tenantId
     ) {
-        MultiTenantConnectionProvider.setCurrentTenant(tenantId);
+        CurrentTenantIdentifierResolverImpl.setCurrentTenant(tenantId);
         try {
             return productService.addProduct(product);
         } finally {
-            MultiTenantConnectionProvider.clear();
+            CurrentTenantIdentifierResolverImpl.clearCurrentTenant();
         }
     }
 
     @GetMapping("/list")
     public List<ResponseProductDTO> getProducts(@RequestHeader("X-Tenant-ID") String tenantId) {
-        MultiTenantConnectionProvider.setCurrentTenant(tenantId);
+        CurrentTenantIdentifierResolverImpl.setCurrentTenant(tenantId);
         try {
             return productService.getAllProducts();
         } finally {
-            MultiTenantConnectionProvider.clear();
+            CurrentTenantIdentifierResolverImpl.clearCurrentTenant();
         }
     }
 }

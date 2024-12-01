@@ -33,12 +33,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public CommonResponseDTO createUser(RequestUserDTO dto) throws IOException {
 
-
+        System.out.println(dto.getEmail());
         User user = User.builder()
                 .userId(UUID.randomUUID().toString())
                 .email(dto.getEmail())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .email(dto.getFirstName())
+                .firstName(dto.getFirstName())
                 .lastName(dto.getLastName())
                 .activeState(false)
                 .registerDate(dto.getRegisterDate())
