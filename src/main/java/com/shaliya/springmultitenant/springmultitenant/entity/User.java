@@ -4,19 +4,18 @@ package com.shaliya.springmultitenant.springmultitenant.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
 
-@Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@RequiredArgsConstructor
-@AllArgsConstructor
+@Builder
+@Entity
+@ToString
 @Table(name = "user")
 public class User {
     @Id
@@ -58,6 +57,7 @@ public class User {
 
     @Column(length = 100, name = "user_name", unique = true)
     private String username;
-
+    @OneToOne(mappedBy = "owner", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Business business;
 
 }
