@@ -23,7 +23,6 @@ public class User {
     private String userId;
 
     @Column(length = 100, name = "email", unique = true)
-    @Email
     private String email;
 
     @Column(name = "password")

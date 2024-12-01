@@ -51,7 +51,7 @@ public class ApplicationSecurityConfig {
                 .authorizeRequests()
                 .requestMatchers(
                         "/api/v1/users/register/**",
-                        "/api/v1/users/verify/**", "/api/v1/users/resend/**",
+                        "/api/v1/products/**",
                         "/api/v1/users/verify-reset/**",
                         "/api/v1/users/reset-password/**",
                         "/api/v1/users/forgot-password-verify/**",
