@@ -28,10 +28,11 @@ public class TenantConfig {
         Map<String, Object> properties = new HashMap<>();
         properties.put("hibernate.multiTenancy", "DATABASE");
         properties.put("hibernate.tenant_identifier_resolver", tenantIdentifierResolver);
+        properties.put("hibernate.hbm2ddl.auto", "update");  // Optional, to automatically create/update schema
 
         return builder
                 .dataSource(dataSource)
-                .packages("com.shaliya.springmultitenant.springmultitenant.entity")
+                .packages("com.shaliya.springmultitenant.springmultitenant.entity") // Ensure this is correct
                 .persistenceUnit("tenantUnit")
                 .properties(properties)
                 .build();
@@ -41,5 +42,7 @@ public class TenantConfig {
     public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
     }
+
+
 }
 

@@ -141,11 +141,19 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- Hibernate Multi-Tenancy Support -->
+        <!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core -->
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.orm</groupId>
+
             <artifactId>hibernate-core</artifactId>
-            <version>6.2.4.Final</version> <!-- Ensure this matches your Hibernate version -->
+            <version>6.6.3.Final</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-ant</artifactId>
+            <version>6.4.2.Final</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

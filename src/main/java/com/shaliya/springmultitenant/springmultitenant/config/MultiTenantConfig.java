@@ -18,7 +18,6 @@ import java.util.Map;
 
 @Configuration
 public class MultiTenantConfig {
-
     @Autowired
     private CustomMultiTenantConnectionProvider multiTenantConnectionProvider;
 
@@ -28,7 +27,6 @@ public class MultiTenantConfig {
     @Autowired
     private DataSource dataSource;
 
-    @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         Map<String, Object> hibernateProperties = new HashMap<>();
         hibernateProperties.put(AvailableSettings.DIALECT, "org.hibernate.dialect.MySQL8Dialect");
@@ -38,7 +36,7 @@ public class MultiTenantConfig {
 
         LocalContainerEntityManagerFactoryBean emfBean = new LocalContainerEntityManagerFactoryBean();
         emfBean.setDataSource(dataSource);
-        emfBean.setPackagesToScan("com.shaliya.springmultitenant.springmultitenant.entity"); // Update with your entity package
+        emfBean.setPackagesToScan("com.shaliya.springmultitenant.springmultitenant.entity");
         emfBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         emfBean.setJpaPropertyMap(hibernateProperties);
 

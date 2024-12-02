@@ -52,18 +52,23 @@ public class TenantFilter implements Filter {
 
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response,
-                         FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
 
         HttpServletRequest req = (HttpServletRequest) request;
         String tenantName = req.getHeader("X-Tenant-ID");
-        System.out.println("doFilter=" + tenantName);
+
+        if (tenantName == null) {
+            tenantName = "default"; // fallback to default tenant
+        }
+
+        // Set the tenant in context
         TenantContext.setCurrentTenant(tenantName);
 
         try {
             chain.doFilter(request, response);
         } finally {
-            TenantContext.setCurrentTenant("");
+            TenantContext.clear();  // Clean up after request processing
         }
     }
 }

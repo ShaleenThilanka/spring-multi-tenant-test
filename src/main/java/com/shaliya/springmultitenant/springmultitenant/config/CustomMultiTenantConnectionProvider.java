@@ -45,8 +45,8 @@ public class CustomMultiTenantConnectionProvider implements MultiTenantConnectio
     }
 
     @Override
-    public Connection getConnection(String tenantIdentifier) throws SQLException {
-        DataSource tenantDataSource = dataSources.get(tenantIdentifier);
+    public Connection getConnection(Object o) throws SQLException {
+        DataSource tenantDataSource = dataSources.get(o.toString());
         if (tenantDataSource == null) {
             tenantDataSource = dataSources.get("default"); // Fallback to default tenant
         }
@@ -54,9 +54,10 @@ public class CustomMultiTenantConnectionProvider implements MultiTenantConnectio
     }
 
     @Override
-    public void releaseConnection(String tenantIdentifier, Connection connection) throws SQLException {
+    public void releaseConnection(Object o, Connection connection) throws SQLException {
         connection.close();
     }
+
 
     @Override
     public boolean supportsAggressiveRelease() {

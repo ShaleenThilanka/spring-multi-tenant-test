@@ -7,6 +7,6 @@ public class MultitenantDataSource extends AbstractRoutingDataSource {
 
     @Override
     protected String determineCurrentLookupKey() {
-        return TenantContext.getCurrentTenant(); // Resolving the tenant dynamically
+        return TenantContext.getCurrentTenant(); // Returns tenant identifier to resolve the datasource
     }
 }

@@ -11,6 +11,7 @@ public class TenantContext {
         CURRENT_TENANT.set(tenant);
         System.out.println(CURRENT_TENANT.get() + " set to " + tenant);
     }
+
     public static void clear() {
         CURRENT_TENANT.remove();
     }
