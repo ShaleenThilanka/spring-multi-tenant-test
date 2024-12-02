@@ -1,6 +1,6 @@
 package com.shaliya.springmultitenant.springmultitenant.controller;
 
-import com.shaliya.springmultitenant.springmultitenant.config.CurrentTenantIdentifierResolverImpl;
+import com.shaliya.springmultitenant.springmultitenant.config.TenantContext;
 import com.shaliya.springmultitenant.springmultitenant.dto.CommonResponseDTO;
 import com.shaliya.springmultitenant.springmultitenant.dto.requestdto.RequestProductDTO;
 import com.shaliya.springmultitenant.springmultitenant.dto.responsedto.ResponseProductDTO;
@@ -25,21 +25,16 @@ public class ProductController {
             @RequestBody RequestProductDTO product,
             @RequestHeader("X-Tenant-ID") String tenantId
     ) {
-        CurrentTenantIdentifierResolverImpl.setCurrentTenant(tenantId);
-        try {
-            return productService.addProduct(product);
-        } finally {
-            CurrentTenantIdentifierResolverImpl.clearCurrentTenant();
-        }
+        System.out.println(tenantId);
+        TenantContext.setCurrentTenant(tenantId);
+        return productService.addProduct(product);
+
     }
 
     @GetMapping("/list")
     public List<ResponseProductDTO> getProducts(@RequestHeader("X-Tenant-ID") String tenantId) {
-        CurrentTenantIdentifierResolverImpl.setCurrentTenant(tenantId);
-        try {
-            return productService.getAllProducts();
-        } finally {
-            CurrentTenantIdentifierResolverImpl.clearCurrentTenant();
-        }
+        TenantContext.setCurrentTenant(tenantId);
+        return productService.getAllProducts();
+
     }
 }

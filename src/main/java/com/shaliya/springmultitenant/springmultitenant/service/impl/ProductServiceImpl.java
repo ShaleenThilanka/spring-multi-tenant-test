@@ -1,7 +1,5 @@
 package com.shaliya.springmultitenant.springmultitenant.service.impl;
 
-import com.shaliya.springmultitenant.springmultitenant.config.CurrentTenantIdentifierResolverImpl;
-import com.shaliya.springmultitenant.springmultitenant.controller.ProductController;
 import com.shaliya.springmultitenant.springmultitenant.dto.CommonResponseDTO;
 import com.shaliya.springmultitenant.springmultitenant.dto.requestdto.RequestProductDTO;
 import com.shaliya.springmultitenant.springmultitenant.dto.responsedto.ResponseProductDTO;

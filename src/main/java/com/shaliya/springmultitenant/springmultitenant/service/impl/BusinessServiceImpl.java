@@ -4,7 +4,6 @@ import com.shaliya.springmultitenant.springmultitenant.entity.Business;
 import com.shaliya.springmultitenant.springmultitenant.entity.User;
 import com.shaliya.springmultitenant.springmultitenant.repo.BusinessRepo;
 import com.shaliya.springmultitenant.springmultitenant.service.BusinessService;
-import com.shaliya.springmultitenant.springmultitenant.service.TenantManagementService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +14,9 @@ import java.util.UUID;
 @Transactional
 public class BusinessServiceImpl implements BusinessService {
     private final BusinessRepo businessRepo;
-    private final TenantManagementService tenantManagementService;
 
-    public BusinessServiceImpl(BusinessRepo businessRepo, TenantManagementService tenantManagementService) {
+    public BusinessServiceImpl(BusinessRepo businessRepo) {
         this.businessRepo = businessRepo;
-        this.tenantManagementService = tenantManagementService;
     }
 
     @Override
@@ -34,7 +31,6 @@ public class BusinessServiceImpl implements BusinessService {
                 .tenantId(tenant)
                 .owner(user)
                 .build();
-        tenantManagementService.provisionTenantDatabase(tenant);
         businessRepo.save(business);
         return business.getTenantId();
     }

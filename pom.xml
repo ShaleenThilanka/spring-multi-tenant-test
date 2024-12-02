@@ -83,11 +83,6 @@
             <version>2.4.2</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-
 
 
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
@@ -119,17 +114,7 @@
             <artifactId>sendgrid-java</artifactId>
             <version>4.4.0</version>
         </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-impl</artifactId>
-            <version>0.11.2</version> <!-- Use the latest version available -->
-        </dependency>
 
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-api</artifactId>
-            <version>0.11.5</version>
-        </dependency>
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -160,6 +145,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
+            <version>6.2.4.Final</version> <!-- Ensure this matches your Hibernate version -->
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

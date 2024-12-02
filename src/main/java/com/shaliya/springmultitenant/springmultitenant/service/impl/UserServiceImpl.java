@@ -1,12 +1,10 @@
 package com.shaliya.springmultitenant.springmultitenant.service.impl;
 
 import com.shaliya.springmultitenant.springmultitenant.dto.CommonResponseDTO;
-import com.shaliya.springmultitenant.springmultitenant.dto.UserDTO;
 import com.shaliya.springmultitenant.springmultitenant.dto.requestdto.RequestUserDTO;
 import com.shaliya.springmultitenant.springmultitenant.entity.User;
 import com.shaliya.springmultitenant.springmultitenant.repo.UserRepo;
 import com.shaliya.springmultitenant.springmultitenant.service.BusinessService;
-import com.shaliya.springmultitenant.springmultitenant.service.TenantManagementService;
 import com.shaliya.springmultitenant.springmultitenant.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

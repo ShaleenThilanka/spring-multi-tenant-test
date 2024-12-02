@@ -1,44 +1,52 @@
 package com.shaliya.springmultitenant.springmultitenant.config;
 
+import jakarta.persistence.EntityManagerFactory;
+import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
+
 @Configuration
 public class MultiTenantConfig {
-    @Autowired
-    private MultiTenantConnectionProvider tenantConnectionProvider;
 
     @Autowired
-    private CurrentTenantIdentifierResolver tenantIdentifierResolver;
+    private CustomMultiTenantConnectionProvider multiTenantConnectionProvider;
+
+    @Autowired
+    private TenantIdentifierResolver tenantIdentifierResolver;
+
+    @Autowired
+    private DataSource dataSource;
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
-        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(dataSource);
-        em.setPackagesToScan("com.shaliya.springmultitenant.springmultitenant.entity");
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        Map<String, Object> hibernateProperties = new HashMap<>();
+        hibernateProperties.put(AvailableSettings.DIALECT, "org.hibernate.dialect.MySQL8Dialect");
+        hibernateProperties.put("hibernate.multiTenancy", "DATABASE");
+        hibernateProperties.put(AvailableSettings.MULTI_TENANT_CONNECTION_PROVIDER, multiTenantConnectionProvider);
+        hibernateProperties.put(AvailableSettings.MULTI_TENANT_IDENTIFIER_RESOLVER, tenantIdentifierResolver);
 
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        em.setJpaVendorAdapter(vendorAdapter);
+        LocalContainerEntityManagerFactoryBean emfBean = new LocalContainerEntityManagerFactoryBean();
+        emfBean.setDataSource(dataSource);
+        emfBean.setPackagesToScan("com.shaliya.springmultitenant.springmultitenant.entity"); // Update with your entity package
+        emfBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        emfBean.setJpaPropertyMap(hibernateProperties);
 
-        Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+        return emfBean;
+    }
 
-        // Multi-tenancy configuration
-        properties.setProperty("hibernate.multiTenancy", "DATABASE");
-        properties.put("hibernate.multi_tenant_connection_provider", tenantConnectionProvider);
-        properties.put("hibernate.tenant_identifier_resolver", tenantIdentifierResolver);
-
-        em.setJpaProperties(properties);
-
-        return em;
+    @Bean
+    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+        return new JpaTransactionManager(emf);
     }
 }

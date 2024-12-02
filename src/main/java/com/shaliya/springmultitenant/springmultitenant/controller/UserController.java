@@ -2,7 +2,6 @@ package com.shaliya.springmultitenant.springmultitenant.controller;
 
 import com.shaliya.springmultitenant.springmultitenant.dto.CommonResponseDTO;
 import com.shaliya.springmultitenant.springmultitenant.dto.requestdto.RequestUserDTO;
-import com.shaliya.springmultitenant.springmultitenant.service.TenantManagementService;
 import com.shaliya.springmultitenant.springmultitenant.service.UserService;
 import com.shaliya.springmultitenant.springmultitenant.util.StandardResponse;
 import org.springframework.http.HttpStatus;
