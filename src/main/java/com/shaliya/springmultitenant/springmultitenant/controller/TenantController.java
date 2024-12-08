@@ -66,7 +66,7 @@ public class TenantController {
                     .driverClassName("com.mysql.cj.jdbc.Driver")
                     .build();
 
-            tenantProvider.addTenantDataSource(request.getTenantId(), tenantDataSource);
+//            tenantProvider.addTenantDataSource(request.getTenantId(), tenantDataSource);
 
             // Initialize schema in the tenant database
             initializeSchema(tenantDataSource);

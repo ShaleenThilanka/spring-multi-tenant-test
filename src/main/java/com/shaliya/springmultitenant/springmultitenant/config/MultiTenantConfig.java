@@ -2,8 +2,6 @@ package com.shaliya.springmultitenant.springmultitenant.config;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.cfg.AvailableSettings;
-import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
-import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,21 +16,27 @@ import java.util.Map;
 
 @Configuration
 public class MultiTenantConfig {
-    @Autowired
+    @Autowired(required = true)
     private CustomMultiTenantConnectionProvider multiTenantConnectionProvider;
 
-    @Autowired
+    @Autowired(required = true)
     private TenantIdentifierResolver tenantIdentifierResolver;
 
-    @Autowired
+    // Consider using @Qualifier if you have multiple DataSource beans
+    @Autowired(required = true)
     private DataSource dataSource;
 
+    @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         Map<String, Object> hibernateProperties = new HashMap<>();
+
         hibernateProperties.put(AvailableSettings.DIALECT, "org.hibernate.dialect.MySQL8Dialect");
         hibernateProperties.put("hibernate.multiTenancy", "DATABASE");
         hibernateProperties.put(AvailableSettings.MULTI_TENANT_CONNECTION_PROVIDER, multiTenantConnectionProvider);
         hibernateProperties.put(AvailableSettings.MULTI_TENANT_IDENTIFIER_RESOLVER, tenantIdentifierResolver);
+        hibernateProperties.put(AvailableSettings.HBM2DDL_AUTO, "update");
+        hibernateProperties.put(AvailableSettings.SHOW_SQL, true);
+        hibernateProperties.put(AvailableSettings.FORMAT_SQL, true);
 
         LocalContainerEntityManagerFactoryBean emfBean = new LocalContainerEntityManagerFactoryBean();
         emfBean.setDataSource(dataSource);

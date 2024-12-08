@@ -3,6 +3,7 @@ package com.shaliya.springmultitenant.springmultitenant.config;
 public class TenantContext {
     private static final ThreadLocal<String> CURRENT_TENANT = new ThreadLocal<>();
 
+
     public static String getCurrentTenant() {
         return CURRENT_TENANT.get();
     }
