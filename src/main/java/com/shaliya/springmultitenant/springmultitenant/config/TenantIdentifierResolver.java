@@ -24,7 +24,7 @@ public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver
             );
         }
 
-        return tenantId != null ? tenantId : "default";
+        return tenantId != null ? tenantId : "master_db";
     }
 
     @Override

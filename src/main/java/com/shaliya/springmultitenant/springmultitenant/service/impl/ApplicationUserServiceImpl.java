@@ -57,20 +57,24 @@ public class ApplicationUserServiceImpl implements UserDetailsService {
 
 
         }
+        String tenantId = null;
+        if (byUsername.getBusiness() != null) {
+            tenantId = byUsername.getBusiness().getTenantId();
+        }
         ApplicationUser user = null;
 
-                user = new ApplicationUser(
-                    byUsername.getPassword(),
-                    byUsername.getEmail(),
-                    grantedAuthorities,
-                    byUsername.isAccountNonExpired(),
-                    byUsername.isAccountNonLocked(),
-                    true,
-                    true
+        user = new ApplicationUser(
+                byUsername.getPassword(),
+                byUsername.getEmail(),
+                grantedAuthorities,
+                byUsername.isAccountNonExpired(),
+                byUsername.isAccountNonLocked(),
+                true,
+                true,
+                tenantId
+        );
 
-            );
-
-
+        System.out.println(user);
         return user;
     }
 }

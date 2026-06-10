@@ -34,7 +34,7 @@ public class MultiTenantConfig {
         hibernateProperties.put("hibernate.multiTenancy", "DATABASE");
         hibernateProperties.put(AvailableSettings.MULTI_TENANT_CONNECTION_PROVIDER, multiTenantConnectionProvider);
         hibernateProperties.put(AvailableSettings.MULTI_TENANT_IDENTIFIER_RESOLVER, tenantIdentifierResolver);
-        hibernateProperties.put(AvailableSettings.HBM2DDL_AUTO, "update");
+        hibernateProperties.put(AvailableSettings.HBM2DDL_AUTO, "none"); // ← CHANGE THIS
         hibernateProperties.put(AvailableSettings.SHOW_SQL, true);
         hibernateProperties.put(AvailableSettings.FORMAT_SQL, true);
 
@@ -46,7 +46,6 @@ public class MultiTenantConfig {
 
         return emfBean;
     }
-
     @Bean
     public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
         return new JpaTransactionManager(emf);

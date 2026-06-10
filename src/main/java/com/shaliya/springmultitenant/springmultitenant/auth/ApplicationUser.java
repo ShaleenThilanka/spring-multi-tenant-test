@@ -1,3 +1,5 @@
+
+
 package com.shaliya.springmultitenant.springmultitenant.auth;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -5,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Set;
-
 public class ApplicationUser implements UserDetails {
 
     private final Set<? extends GrantedAuthority> getAuthorities;
@@ -15,6 +16,7 @@ public class ApplicationUser implements UserDetails {
     private final boolean isAccountNonLocked;
     private final boolean isCredentialsNonExpired;
     private final boolean isEnabled;
+    private final String tenantId; // ADD THIS
 
     public ApplicationUser(
             String password, String username,
@@ -22,7 +24,8 @@ public class ApplicationUser implements UserDetails {
             boolean isAccountNonExpired,
             boolean isAccountNonLocked,
             boolean isCredentialsNonExpired,
-            boolean isEnabled) {
+            boolean isEnabled,
+            String tenantId) { // ADD THIS
         this.getAuthorities = getAuthorities;
         this.password = password;
         this.username = username;
@@ -30,6 +33,12 @@ public class ApplicationUser implements UserDetails {
         this.isAccountNonLocked = isAccountNonLocked;
         this.isCredentialsNonExpired = isCredentialsNonExpired;
         this.isEnabled = isEnabled;
+        this.tenantId = tenantId; // ADD THIS
+    }
+
+
+    public String getTenantId() {
+        return tenantId;
     }
 
     @Override
@@ -66,5 +75,4 @@ public class ApplicationUser implements UserDetails {
     public boolean isEnabled() {
         return isEnabled;
     }
-
 }

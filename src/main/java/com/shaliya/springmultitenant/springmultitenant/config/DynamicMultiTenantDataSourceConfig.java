@@ -31,8 +31,6 @@ public class DynamicMultiTenantDataSourceConfig {
                 env.getProperty("spring.datasource.password")
         );
 
-        // Initialize default datasources
-        tenantDataSources.put("default", defaultDataSource);
         tenantDataSources.put("master_db", defaultDataSource);
 
         multitenantDataSource.setTargetDataSources(new HashMap<>(tenantDataSources));

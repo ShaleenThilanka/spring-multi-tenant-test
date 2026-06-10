@@ -49,7 +49,7 @@ public class TenantController {
             DataSource adminDataSource = DataSourceBuilder.create()
                     .url("jdbc:mysql://localhost:3306/")
                     .username("root") // Admin username
-                    .password("1234") // Admin password
+                    .password("12345678") // Admin password
                     .driverClassName("com.mysql.cj.jdbc.Driver")
                     .build();
 

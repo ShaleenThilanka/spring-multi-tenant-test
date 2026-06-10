@@ -30,7 +30,7 @@ public class MultitenantDataSource extends AbstractRoutingDataSource {
 
         // Map to hold tenant datasources
         Map<Object, Object> tenantDataSources = new HashMap<>();
-        tenantDataSources.put("default", defaultDataSource);
+        tenantDataSources.put("master_db", defaultDataSource);
 
         // Add tenant-specific datasources
         tenantDataSources.put("tenant_a", createDataSource(

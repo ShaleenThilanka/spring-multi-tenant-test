@@ -1,5 +1,6 @@
 package com.shaliya.springmultitenant.springmultitenant.security;
 
+import com.shaliya.springmultitenant.springmultitenant.config.TenantResolutionFilter;
 import com.shaliya.springmultitenant.springmultitenant.jwt.*;
 import com.shaliya.springmultitenant.springmultitenant.service.impl.ApplicationUserServiceImpl;
 import org.springframework.context.annotation.Bean;
@@ -27,27 +28,34 @@ public class ApplicationSecurityConfig {
     private final ApplicationUserServiceImpl applicationUserService;
     private final JwtConfig jwtConfig;
     private final SecretKey secretKey;
-
     private final AuthenticationConfiguration authenticationConfiguration;
-    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, ApplicationUserServiceImpl applicationUserService, JwtConfig jwtConfig, SecretKey secretKey, AuthenticationConfiguration authenticationConfiguration) {
+    private final TenantResolutionFilter tenantResolutionFilter; // ADD THIS
+
+    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder,
+                                     ApplicationUserServiceImpl applicationUserService,
+                                     JwtConfig jwtConfig,
+                                     SecretKey secretKey,
+                                     AuthenticationConfiguration authenticationConfiguration,
+                                     TenantResolutionFilter tenantResolutionFilter) { // ADD THIS
         this.passwordEncoder = passwordEncoder;
         this.applicationUserService = applicationUserService;
         this.jwtConfig = jwtConfig;
         this.secretKey = secretKey;
         this.authenticationConfiguration = authenticationConfiguration;
+        this.tenantResolutionFilter = tenantResolutionFilter; // ADD THIS
     }
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf -> csrf.disable())
-                .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
-                .sessionManagement(
-                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationConfiguration.getAuthenticationManager(),jwtConfig, secretKey))
+                .cors(c -> c.configurationSource(corsConfigurationSource()))
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(
+                        authenticationConfiguration.getAuthenticationManager(), jwtConfig, secretKey))
                 .addFilterAfter(new JwtTokenVerifier(jwtConfig, secretKey),
                         JwtUsernameAndPasswordAuthenticationFilter.class)
+                .addFilterAfter(tenantResolutionFilter, JwtTokenVerifier.class) // ADD THIS
                 .authorizeRequests()
                 .requestMatchers(
                         "/api/v1/users/register/**",
@@ -56,16 +64,17 @@ public class ApplicationSecurityConfig {
                         "/api/v1/users/verify-reset/**",
                         "/api/v1/users/reset-password/**",
                         "/api/v1/users/forgot-password-verify/**",
-                        "/api/v1/**/visitor/**", "/api/v1/test/**")
+                        "/api/v1/**/visitor/**",
+                        "/api/v1/test/**")
                 .permitAll()
                 .anyRequest().authenticated();
 
         http.authenticationProvider(authenticationProvider());
 
-
         return http.build();
-
     }
+
+
 
 
 

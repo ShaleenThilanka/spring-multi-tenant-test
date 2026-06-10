@@ -22,18 +22,17 @@ public class ProductController {
 
     @PostMapping("/add")
     public CommonResponseDTO addProduct(
-            @RequestBody RequestProductDTO product,
-            @RequestHeader("X-Tenant-ID") String tenantId
+            @RequestBody RequestProductDTO product
     ) {
-        System.out.println(tenantId);
-        TenantContext.setCurrentTenant(tenantId);
+
+
         return productService.addProduct(product);
 
     }
 
     @GetMapping("/list")
-    public List<ResponseProductDTO> getProducts(@RequestHeader("X-Tenant-ID") String tenantId) {
-        TenantContext.setCurrentTenant(tenantId);
+    public List<ResponseProductDTO> getProducts() {
+
         return productService.getAllProducts();
 
     }

@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @Configuration
@@ -18,7 +20,10 @@ public class CustomMultiTenantConnectionProvider implements MultiTenantConnectio
 
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    private TenantSchemaSync tenantSchemaSync; // ADD THIS
 
+    private final Set<String> syncedTenants = ConcurrentHashMap.newKeySet();
     @Override
     public Connection getAnyConnection() throws SQLException {
         return dataSource.getConnection();
@@ -32,14 +37,15 @@ public class CustomMultiTenantConnectionProvider implements MultiTenantConnectio
     @Override
     public Connection getConnection(Object tenantIdentifier) throws SQLException {
         // Ensure tenantIdentifier is not null
-        String tenantId = tenantIdentifier != null ? tenantIdentifier.toString() : "default";
+        String tenantId = tenantIdentifier != null ? tenantIdentifier.toString() : "master_db";
 
-        // Get connection
+        // Sync schema the first time this tenant is accessed
+        if (!tenantId.equals("master_db") && syncedTenants.add(tenantId)) {
+            tenantSchemaSync.syncTenantSchema(tenantId); // creates missing tables/columns
+        }
+
         Connection connection = dataSource.getConnection();
-
-        // Switch to the specific tenant database
-        connection.setCatalog(tenantId );
-
+        connection.setCatalog(tenantId);
         return connection;
     }
 

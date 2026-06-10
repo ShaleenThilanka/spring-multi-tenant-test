@@ -59,7 +59,7 @@ public class TenantFilter implements Filter {
         String tenantName = req.getHeader("X-Tenant-ID");
 
         if (tenantName == null) {
-            tenantName = "default"; // fallback to default tenant
+            tenantName = "master_db"; // fallback to default tenant
         }
 
         // Set the tenant in context
