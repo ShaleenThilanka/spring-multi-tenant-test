@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-ivory text-bark font-body antialiased;
+}
+
+::selection {
+  @apply bg-gold/30 text-bark;
+}
+
+h1, h2, h3, h4 {
+  @apply font-display;
+}
+
+a {
+  @apply underline-offset-4;
+}
+
+@layer components {
+  .field {
+    @apply mt-1 rounded-md border border-sage/40 bg-ivory px-3 py-2 font-body text-bark caret-bark outline-none;
+    color-scheme: light;
+  }
+
+  .field::placeholder {
+    @apply text-bark/40;
+  }
+
+  .field:focus {
+    @apply border-gold;
+  }
+
+  .field:-webkit-autofill,
+  .field:-webkit-autofill:hover,
+  .field:-webkit-autofill:focus {
+    -webkit-text-fill-color: theme('colors.bark');
+    box-shadow: 0 0 0 1000px theme('colors.ivory') inset;
+    transition: background-color 9999s ease-out;
+  }
+}
+
+/* Visible keyboard focus everywhere */
+:focus-visible {
+  outline: 2px solid theme('colors.gold');
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.vine-divider {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: #5f8a64;
+  opacity: 1;
+}
+
+.venue-map .leaflet-tile-pane {
+  filter: grayscale(0.1) sepia(0.35) hue-rotate(-18deg) saturate(1.15) brightness(0.96);
+}
+
+.venue-map .leaflet-control-attribution {
+  background: rgba(247, 239, 230, 0.9);
+  color: theme('colors.bark');
+}
+
+.venue-map-pin {
+  background: transparent;
+  border: none;
+}
+
+.venue-map-pin__dot {
+  display: block;
+  width: 22px;
+  height: 22px;
+  margin: 0 auto;
+  border-radius: 50% 50% 50% 0;
+  background: #6b1c2c;
+  border: 2px solid #f7efe6;
+  box-shadow: 0 4px 10px rgba(74, 18, 32, 0.4);
+  transform: rotate(-45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
