@@ -54,8 +54,7 @@ export const siteConfig = {
   },
 
   splash: {
-    // Replace public/images/splash.jpg with your couple photo.
-    image: '/images/splash.jpg',
+    image: '/images/splash.png',
     sealedMs: 3000,
   },
 

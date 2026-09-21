@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { siteConfig } from '../config/siteConfig';
+import AmbientAtmosphere from './AmbientAtmosphere.jsx';
 
 function WaxSeal({ initials }) {
   return (
@@ -90,7 +91,7 @@ export default function EnvelopeSplash() {
       {phase !== 'gone' && (
         <motion.div
           key="envelope-splash"
-          className="fixed inset-0 z-[100] cursor-pointer overflow-hidden bg-[#f7efe6]"
+          className="fixed inset-0 z-[100] cursor-pointer overflow-hidden bg-[#f4f0e8]"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1 }}
@@ -106,39 +107,40 @@ export default function EnvelopeSplash() {
           aria-label="Wedding invitation envelope"
           tabIndex={0}
         >
-          <div
-            className="pointer-events-none absolute inset-0 opacity-40"
-            style={{
-              backgroundImage:
-                'radial-gradient(rgba(139,46,62,0.08) 0.8px, transparent 0.8px)',
-              backgroundSize: '4px 4px',
-            }}
-          />
-
           {/* Invitation photo — revealed as the envelope opens */}
-          <div className="absolute inset-0 z-[1] flex items-center justify-center p-5 sm:p-8">
+          <div className="absolute inset-0 z-[1] overflow-hidden">
             <motion.article
-              className="relative h-full w-full max-w-sm overflow-hidden rounded-sm border border-gold/30 shadow-2xl"
+              className="relative h-full w-full"
               initial={false}
-              animate={{ opacity: showCard ? 1 : 0, y: showCard ? 0 : 28 }}
-              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              animate={{ opacity: showCard ? 1 : 0 }}
+              transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
             >
               <img
                 src={splash.image}
                 alt={`${couple.partnerOne} and ${couple.partnerTwo}`}
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover object-center"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-canopy/85 via-canopy/15 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 px-5 pb-8 text-center text-ivory">
-                <p className="font-body text-[0.65rem] uppercase tracking-[0.32em] text-sage">Together</p>
-                <h1 className="mt-2 font-display text-3xl italic leading-tight">
-                  {couple.partnerOne} <span className="not-italic text-gold">&amp;</span> {couple.partnerTwo}
+              <div className="absolute inset-0 bg-gradient-to-t from-bark/55 via-transparent to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 px-6 pb-16 text-center">
+                <p className="font-body text-[0.65rem] uppercase tracking-[0.36em] text-ivory/80">
+                  Together
+                </p>
+                <h1 className="mt-2 font-display text-3xl italic leading-tight text-ivory sm:text-4xl">
+                  {couple.partnerOne} &amp; {couple.partnerTwo}
                 </h1>
-                <p className="mt-2 font-display text-xl text-ivory/95">{wedding.displayDate}</p>
-                <p className="mt-1 font-body text-xs text-ivory/70">{venue.name}</p>
+                <p className="mt-2 font-display text-xl text-ivory/95">
+                  {wedding.displayDate}
+                </p>
+                <p className="mt-1 font-body text-xs text-ivory/75">{venue.name}</p>
               </div>
             </motion.article>
           </div>
+
+          {showCard && (
+            <div className="pointer-events-none absolute inset-0 z-[6]">
+              <AmbientAtmosphere leafCount={8} />
+            </div>
+          )}
 
           {/* Bottom of the envelope */}
           <motion.div

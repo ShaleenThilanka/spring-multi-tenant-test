@@ -1,16 +1,16 @@
 import { useMemo } from 'react';
-import RoseBloom from './RoseBloom.jsx';
+import RosePetal from './RosePetal.jsx';
 
-function seededRoses(count) {
+function seededPetals(count) {
   return Array.from({ length: count }, (_, i) => {
     const left = (i * 37) % 100;
-    const size = 36 + ((i * 11) % 14);
-    const duration = 18 + ((i * 7) % 14);
-    const delay = (i * 2.3) % 20;
-    const driftX = (i % 2 === 0 ? 1 : -1) * (30 + ((i * 11) % 60));
-    const rotate = 28 + ((i * 29) % 160);
+    const size = 16 + ((i * 9) % 12);
+    const duration = 14 + ((i * 7) % 12);
+    const delay = (i * 1.8) % 14;
+    const driftX = (i % 2 === 0 ? 1 : -1) * (24 + ((i * 11) % 50));
+    const rotate = 80 + ((i * 47) % 280);
     const isWhite = i % 2 === 0;
-    return { left, size, duration, delay, driftX, rotate, isWhite, key: `rose-${i}` };
+    return { left, size, duration, delay, driftX, rotate, isWhite, key: `petal-${i}` };
   });
 }
 
@@ -25,8 +25,8 @@ function seededFireflies(count) {
   });
 }
 
-export default function AmbientAtmosphere({ leafCount = 6, fireflyCount = 0, fixed = false }) {
-  const roses = useMemo(() => seededRoses(leafCount), [leafCount]);
+export default function AmbientAtmosphere({ leafCount = 10, fireflyCount = 0, fixed = false }) {
+  const petals = useMemo(() => seededPetals(leafCount), [leafCount]);
   const fireflies = useMemo(() => seededFireflies(fireflyCount), [fireflyCount]);
 
   if (!leafCount && !fireflyCount) return null;
@@ -40,21 +40,21 @@ export default function AmbientAtmosphere({ leafCount = 6, fireflyCount = 0, fix
       }
       aria-hidden="true"
     >
-      {roses.map((rose) => (
-        <RoseBloom
-          key={rose.key}
-          white={rose.isWhite}
-          width={rose.size}
-          className="absolute top-[-8%] animate-drift"
+      {petals.map((petal) => (
+        <RosePetal
+          key={petal.key}
+          white={petal.isWhite}
+          width={petal.size}
+          className="absolute top-[-6%] animate-drift"
           style={{
-            left: `${rose.left}%`,
-            animationDuration: `${rose.duration}s`,
-            animationDelay: `${rose.delay}s`,
-            '--drift-x': `${rose.driftX}px`,
-            '--drift-r': `${rose.rotate}deg`,
-            filter: rose.isWhite
-              ? 'drop-shadow(0 1px 2px rgba(180, 35, 58, 0.28))'
-              : 'drop-shadow(0 2px 3px rgba(122, 21, 38, 0.22))',
+            left: `${petal.left}%`,
+            animationDuration: `${petal.duration}s`,
+            animationDelay: `${petal.delay}s`,
+            '--drift-x': `${petal.driftX}px`,
+            '--drift-r': `${petal.rotate}deg`,
+            filter: petal.isWhite
+              ? 'drop-shadow(0 1px 1px rgba(180, 35, 58, 0.22))'
+              : 'drop-shadow(0 1px 2px rgba(122, 21, 38, 0.18))',
           }}
         />
       ))}

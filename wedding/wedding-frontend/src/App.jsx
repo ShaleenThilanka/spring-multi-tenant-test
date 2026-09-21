@@ -47,7 +47,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-ivory">
-      {!isAdmin && <AmbientAtmosphere leafCount={6} fireflyCount={0} fixed />}
+      {!isAdmin && <AmbientAtmosphere leafCount={10} fireflyCount={0} fixed />}
       <EnvelopeSplash />
       {!isAdmin && <MusicPlayer />}
       <AnimatedRoutes />
