@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { siteConfig } from '../config/siteConfig';
@@ -29,6 +29,7 @@ export default function EnvelopeSplash() {
   const { pathname } = useLocation();
   const isAdmin = pathname.startsWith('/admin');
   const [phase, setPhase] = useState('sealed');
+  const videoRef = useRef(null);
 
   const { couple, wedding, venue, splash } = siteConfig;
   const sealedMs = splash.sealedMs ?? 3000;
@@ -64,7 +65,7 @@ export default function EnvelopeSplash() {
 
   useEffect(() => {
     if (phase !== 'revealed') return undefined;
-    const t = setTimeout(() => setPhase('gone'), 2800);
+    const t = setTimeout(() => setPhase('gone'), 8000);
     return () => clearTimeout(t);
   }, [phase]);
 
@@ -79,6 +80,22 @@ export default function EnvelopeSplash() {
       document.body.style.overflow = prev;
     };
   }, [isAdmin, phase]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return undefined;
+    if (!isOpen) {
+      video.pause();
+      return undefined;
+    }
+    const play = () => {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    };
+    if (video.readyState >= 2) play();
+    else video.addEventListener('canplay', play, { once: true });
+    return () => video.removeEventListener('canplay', play);
+  }, [isOpen]);
 
   const openNow = () => {
     if (phase === 'sealed') setPhase('opening');
@@ -107,21 +124,31 @@ export default function EnvelopeSplash() {
           aria-label="Wedding invitation envelope"
           tabIndex={0}
         >
-          {/* Invitation photo — revealed as the envelope opens */}
+          {/* Invitation video — plays as the envelope lifts */}
           <div className="absolute inset-0 z-[1] overflow-hidden">
             <motion.article
               className="relative h-full w-full"
               initial={false}
               animate={{ opacity: showCard ? 1 : 0 }}
-              transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             >
-              <img
-                src={splash.image}
-                alt={`${couple.partnerOne} and ${couple.partnerTwo}`}
+              <video
+                ref={videoRef}
+                src={splash.video}
                 className="h-full w-full object-cover object-center"
+                muted
+                playsInline
+                loop
+                preload="auto"
+                aria-label={`${couple.partnerOne} and ${couple.partnerTwo}`}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-bark/55 via-transparent to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 px-6 pb-16 text-center">
+              <motion.div
+                className="absolute inset-x-0 bottom-0 px-6 pb-16 text-center"
+                initial={false}
+                animate={{ opacity: showCard ? 1 : 0, y: showCard ? 0 : 16 }}
+                transition={{ duration: 0.9, delay: showCard ? 0.9 : 0, ease: [0.22, 1, 0.36, 1] }}
+              >
                 <p className="font-body text-[0.65rem] uppercase tracking-[0.36em] text-ivory/80">
                   Together
                 </p>
@@ -132,7 +159,7 @@ export default function EnvelopeSplash() {
                   {wedding.displayDate}
                 </p>
                 <p className="mt-1 font-body text-xs text-ivory/75">{venue.name}</p>
-              </div>
+              </motion.div>
             </motion.article>
           </div>
 

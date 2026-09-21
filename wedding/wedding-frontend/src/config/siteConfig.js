@@ -4,7 +4,7 @@
 export const siteConfig = {
   couple: {
     partnerOne: 'Shaleen',
-    partnerTwo: 'Kavindya',
+    partnerTwo: 'Keshani',
   },
 
   // Wedding date confirmed as November 5, 2026 (Ligness Green Odyssey booking).
@@ -54,7 +54,7 @@ export const siteConfig = {
   },
 
   splash: {
-    image: '/images/splash.png',
+    video: '/images/splash.mp4',
     sealedMs: 3000,
   },
 
